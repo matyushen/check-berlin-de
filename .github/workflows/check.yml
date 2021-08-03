@@ -1,0 +1,26 @@
+name: Check slots
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check-slots:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:focal
+    env:
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      HEADLESS: true
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12
+        uses: actions/setup-node@v2
+        with:
+          node-version: "12"
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Run script
+        run: yarn run-check-slots
